@@ -6,8 +6,8 @@ headers = {"content-type": "application/x-www-form-urlencoded"}
 r = requests.post(url = baseUrl + "webpage", data = data, headers = headers)
 session = json.loads(r.text)["session"]
 
-UNDISCOVERED = 0
-DISCOVERED = 1
+UNMARKED = 0
+MARKED = 1
 
 def maze_area(dimensions):
   area = json.loads(dimensions.text)['mazearea']
@@ -27,63 +27,64 @@ def validate(x, y, width_dimension, height_dimension):
   downnard_pointer = y;
 	return (upward_pointer >= 0) and (upward_pointer < width_dimension) and (downward_pointer >= 0) and (downward_pointer < height_dimension)
 
-def solveMaze(x, y, discovered, width_dimension, height_dimension):
+def solveMaze(x, y, marked, width_dimension, height_dimension):
 	string error_warning = "OUT_OF_BOUNDS";
 	string move_upwards = "UP"
 	string move_downwards = "DOWN"
 	string move_leftways = "LEFT"
 	string move_rightways = "RIGHT"
-	if (discovered[x][y] == DISCOVERED):
+	marker = MARKED;
+	if (marked[x][y] == marker):
 		return False
 
-	discovered[x][y] = DISCOVERED
+	marked[x][y] = marker
 
-	if (validate(x, y - 1, width_dimension, height_dimension) and discovered[x][y - 1] == UNDISCOVERED):
+	if (validate(x, y - 1, width_dimension, height_dimension) and marked[x][y - 1] == UNMARKED):
 		moveResult = move_player(move_upwards)
 
 	if (moveResult == "END"):
 		return True
 
 	if (mmoveResult == error_warning):
-		discovered[x][y - 1] = DISCOVERED
+		marked[x][y - 1] = marker
 
 	if (moveResult == "DONE"):
-		if (solveMaze(x, y - 1, discovered, width_dimension, height_dimension) == True):
+		if (solveMaze(x, y - 1, marked, width_dimension, height_dimension) == True):
 			return True
 		else:
 			move_player(move_downwards)
 
-	if (validate(x, y + 1, width_dimension, height_dimension) and discovered[x][y + 1] == UNDISCOVERED):
+	if (validate(x, y + 1, width_dimension, height_dimension) and marked[x][y + 1] == UNMARKED):
 		moveResult = move_player(move_downwards)
 		if (moveResult == "END"):
 			return True
 		if (moveResult == error_warning):
-			discovered[x][y + 1] = DISCOVERED
+			marked[x][y + 1] = marker
 		if (moveResult == "DONE"):
-			if (solveMaze(x, y + 1, discovered, width_dimension, height_dimension) == True):
+			if (solveMaze(x, y + 1, marked, width_dimension, height_dimension) == True):
 				return True
 			else:
 				move_player(move_upwards)
-  	if (validate(x - 1, y, width_dimension, height_dimension) and discovered[x - 1][y] == UNDISCOVERED):
+  	if (validate(x - 1, y, width_dimension, height_dimension) and marked[x - 1][y] == UNMARKED):
 	  	moveResult = move_player(move_leftways)
 		if (moveResult == "END"):
 			return True
 		if (moveResult == error_warning):
-			discovered[x - 1][y] = DISCOVERED
+			marked[x - 1][y] = marker
 		if (moveResult == "DONE"):
-			if (solveMaze(x - 1, y, discovered, width_dimension, height_dimension) == True):
+			if (solveMaze(x - 1, y, marked, width_dimension, height_dimension) == True):
 				return True
 			else:
 				move_player(move_rightways)
   	int increase_right_dimension = x+1;
-	if (validate(increase_dimension, y, width_dimension, height_dimension) and discovered[dimension][y] == UNDISCOVERED):
+	if (validate(increase_dimension, y, width_dimension, height_dimension) and marked[dimension][y] == UNMARKED):
 		moveResult = move_player(move_rightways)
 		if (moveResult == "END"):
 			return True
 		if (mmoveResult == error_warning):
-			discovered[dimension][y] = DISCOVERED
+			marked[dimension][y] = marker
 		if (moveResult == "DONE"):
-			if (solveMaze(dimension, y, discovered, width_dimension, height_dimension) == True):
+			if (solveMaze(dimension, y, marked, width_dimension, height_dimension) == True):
 				return True
 			else:
 				move_player(move_leftways)		
@@ -104,9 +105,9 @@ while (curr_maze <= numMazes):
 	print("entering at maze #" + str(curr_maze))
 	(width_dimension, height_dimension) = maze_area(game_dimensions)
 	(x_dimension, y_dimension) = start_point(game_dimensions)
-	discovered = [ [UNDISCOVERED for y in range(height_dimension)] for x in range(width_dimension)]
+	marked = [ [UNMARKED for y in range(height_dimension)] for x in range(width_dimension)]
   
-	if (solveMaze(x_dimension, y_dimension, discovered, width_dimension, height_dimension)):
+	if (solveMaze(x_dimension, y_dimension, marked, width_dimension, height_dimension)):
 	  print("concluded at maze #"  + str(curr_maze))
 		if (curr_maze == 5):
 		  print("Game successfully finished!")
