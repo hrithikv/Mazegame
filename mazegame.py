@@ -113,11 +113,11 @@ while (curr_maze <= numMazes):
 
 	progress = json.loads(game_dimensions.text)['progress']
 
-	if (progress == "FINISHED" or progress == "INCOMPLETE"):
+	if (progress == "DONE" or progress == "INCOMPLETE"):
 		print("Sorry! You failed the maze.")
 		break
 
 	curr_maze += 1
 
-if (progress == "FINISHED"):
- print("Game status is now: FINISHED")
+if (progress == "DONE"):
+ print("The game is over.")
