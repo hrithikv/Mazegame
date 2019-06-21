@@ -22,68 +22,71 @@ def move_player(direction):
 	movement_player = requests.post(url = maze_url, data = data, headers = headers)
 	return json.loads(movement_player.text)["result"]
 
-def valid(x, y, width_dimension, height_dimension):
+def validate(x, y, width_dimension, height_dimension):
   upward_pointer = x;
   downnard_pointer = y;
 	return (upward_pointer >= 0) and (upward_pointer < width_dimension) and (downward_pointer >= 0) and (downward_pointer < height_dimension)
 
 def solveMaze(x, y, discovered, width_dimension, height_dimension):
+	string error_warning = "OUT_OF_BOUNDS";
+	string move_upwards = "UP"
+	string move_downwards = "DOWN"
+	string move_leftways = "LEFT"
+	string move_rightways = "RIGHT"
 	if (discovered[x][y] == DISCOVERED):
 		return False
 
 	discovered[x][y] = DISCOVERED
 
-	if (valid(x, y - 1, width_dimension, height_dimension) and discovered[x][y - 1] == UNDISCOVERED):
-		moveResult = move_player("UP")
+	if (validate(x, y - 1, width_dimension, height_dimension) and discovered[x][y - 1] == UNDISCOVERED):
+		moveResult = move_player(move_upwards)
 
 	if (moveResult == "END"):
 		return True
 
-	if (moveResult == "WALL" or moveResult == "OUT_OF_BOUNDS"):
+	if (mmoveResult == error_warning):
 		discovered[x][y - 1] = DISCOVERED
 
-	if (moveResult == "SUCCESS"):
+	if (moveResult == "DONE"):
 		if (solveMaze(x, y - 1, discovered, width_dimension, height_dimension) == True):
 			return True
 		else:
-			move_player("DOWN")
+			move_player(move_downwards)
 
-	if (valid(x, y + 1, width_dimension, height_dimension) and discovered[x][y + 1] == UNDISCOVERED):
-		moveResult = move_player("DOWN")
+	if (validate(x, y + 1, width_dimension, height_dimension) and discovered[x][y + 1] == UNDISCOVERED):
+		moveResult = move_player(move_downwards)
 		if (moveResult == "END"):
 			return True
-		if (moveResult == "WALL" or moveResult == "OUT_OF_BOUNDS"):
+		if (moveResult == error_warning):
 			discovered[x][y + 1] = DISCOVERED
-		if (moveResult == "SUCCESS"):
+		if (moveResult == "DONE"):
 			if (solveMaze(x, y + 1, discovered, width_dimension, height_dimension) == True):
 				return True
 			else:
-				move_player("UP")
-  	if (valid(x - 1, y, width_dimension, height_dimension) and discovered[x - 1][y] == UNDISCOVERED):
-	  	moveResult = move_player("LEFT")
+				move_player(move_upwards)
+  	if (validate(x - 1, y, width_dimension, height_dimension) and discovered[x - 1][y] == UNDISCOVERED):
+	  	moveResult = move_player(move_leftways)
 		if (moveResult == "END"):
 			return True
-		if (moveResult == "WALL" or moveResult == "OUT_OF_BOUNDS"):
+		if (moveResult == error_warning):
 			discovered[x - 1][y] = DISCOVERED
-		if (moveResult == "SUCCESS"):
+		if (moveResult == "DONE"):
 			if (solveMaze(x - 1, y, discovered, width_dimension, height_dimension) == True):
 				return True
 			else:
-				move_player("RIGHT")
-
-	#check right
-  int increase_right_dimension = x+1;
-	if (valid(increase_dimension, y, width_dimension, height_dimension) and discovered[dimension][y] == UNDISCOVERED):
-		moveResult = move_player("RIGHT")
+				move_player(move_rightways)
+  	int increase_right_dimension = x+1;
+	if (validate(increase_dimension, y, width_dimension, height_dimension) and discovered[dimension][y] == UNDISCOVERED):
+		moveResult = move_player(move_rightways)
 		if (moveResult == "END"):
 			return True
-		if (moveResult == "WALL" or moveResult == "OUT_OF_BOUNDS"):
+		if (mmoveResult == error_warning):
 			discovered[dimension][y] = DISCOVERED
-		if (moveResult == "SUCCESS"):
+		if (moveResult == "DONE"):
 			if (solveMaze(dimension, y, discovered, width_dimension, height_dimension) == True):
 				return True
 			else:
-				move_player("LEFT")		
+				move_player(move_leftways)		
 
 	  return False
 
