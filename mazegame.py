@@ -108,8 +108,7 @@ while (curr_maze <= numMazes):
 	marked = [ [UNMARKED for y in range(height_dimension)] for x in range(width_dimension)]
   
 	if (solveMaze(x_dimension, y_dimension, marked, width_dimension, height_dimension)):
-	  print("concluded at maze #"  + str(curr_maze))
-		if (curr_maze == 5):
+        	if (curr_maze == 5):
 		  print("Game successfully finished!")
 
 	progress = json.loads(game_dimensions.text)['progress']
